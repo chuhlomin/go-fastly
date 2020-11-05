@@ -43,24 +43,24 @@ func (s kafkasByName) Less(i, j int) bool {
 
 // ListKafkasInput is used as input to the ListKafkas function.
 type ListKafkasInput struct {
-	// Service is the ID of the service (required).
-	Service string
+	// ServiceID is the ID of the service (required).
+	ServiceID string
 
-	// Version is the specific configuration version (required).
-	Version int
+	// ServiceVersion is the specific configuration version (required).
+	ServiceVersion int
 }
 
 // ListKafkas returns the list of kafkas for the configuration version.
 func (c *Client) ListKafkas(i *ListKafkasInput) ([]*Kafka, error) {
-	if i.Service == "" {
-		return nil, ErrMissingService
+	if i.ServiceID == "" {
+		return nil, ErrMissingServiceID
 	}
 
-	if i.Version == 0 {
-		return nil, ErrMissingVersion
+	if i.ServiceVersion == 0 {
+		return nil, ErrMissingServiceVersion
 	}
 
-	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka", i.Service, i.Version)
+	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka", i.ServiceID, i.ServiceVersion)
 	resp, err := c.Get(path, nil)
 	if err != nil {
 		return nil, err
@@ -76,10 +76,11 @@ func (c *Client) ListKafkas(i *ListKafkasInput) ([]*Kafka, error) {
 
 // CreateKafkaInput is used as input to the CreateKafka function.
 type CreateKafkaInput struct {
-	// Service is the ID of the service. Version is the specific configuration
-	// version. Both fields are required.
-	Service string
-	Version int
+	// ServiceID is the ID of the service (required).
+	ServiceID string
+
+	// ServiceVersion is the specific configuration version (required).
+	ServiceVersion int
 
 	Name              *string      `form:"name,omitempty"`
 	Brokers           *string      `form:"brokers,omitempty"`
@@ -99,15 +100,15 @@ type CreateKafkaInput struct {
 
 // CreateKafka creates a new Fastly kafka.
 func (c *Client) CreateKafka(i *CreateKafkaInput) (*Kafka, error) {
-	if i.Service == "" {
-		return nil, ErrMissingService
+	if i.ServiceID == "" {
+		return nil, ErrMissingServiceID
 	}
 
-	if i.Version == 0 {
-		return nil, ErrMissingVersion
+	if i.ServiceVersion == 0 {
+		return nil, ErrMissingServiceVersion
 	}
 
-	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka", i.Service, i.Version)
+	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka", i.ServiceID, i.ServiceVersion)
 	resp, err := c.PostForm(path, i, nil)
 	if err != nil {
 		return nil, err
@@ -122,10 +123,11 @@ func (c *Client) CreateKafka(i *CreateKafkaInput) (*Kafka, error) {
 
 // GetKafkaInput is used as input to the GetKafka function.
 type GetKafkaInput struct {
-	// Service is the ID of the service. Version is the specific configuration
-	// version. Both fields are required.
-	Service string
-	Version int
+	// ServiceID is the ID of the service (required).
+	ServiceID string
+
+	// ServiceVersion is the specific configuration version (required).
+	ServiceVersion int
 
 	// Name is the name of the kafka to fetch.
 	Name string
@@ -133,19 +135,19 @@ type GetKafkaInput struct {
 
 // GetKafka gets the kafka configuration with the given parameters.
 func (c *Client) GetKafka(i *GetKafkaInput) (*Kafka, error) {
-	if i.Service == "" {
-		return nil, ErrMissingService
+	if i.ServiceID == "" {
+		return nil, ErrMissingServiceID
 	}
 
-	if i.Version == 0 {
-		return nil, ErrMissingVersion
+	if i.ServiceVersion == 0 {
+		return nil, ErrMissingServiceVersion
 	}
 
 	if i.Name == "" {
 		return nil, ErrMissingName
 	}
 
-	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka/%s", i.Service, i.Version, url.PathEscape(i.Name))
+	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka/%s", i.ServiceID, i.ServiceVersion, url.PathEscape(i.Name))
 	resp, err := c.Get(path, nil)
 	if err != nil {
 		return nil, err
@@ -160,10 +162,11 @@ func (c *Client) GetKafka(i *GetKafkaInput) (*Kafka, error) {
 
 // UpdateKafkaInput is used as input to the UpdateKafka function.
 type UpdateKafkaInput struct {
-	// Service is the ID of the service. Version is the specific configuration
-	// version. Both fields are required.
-	Service string
-	Version int
+	// ServiceID is the ID of the service (required).
+	ServiceID string
+
+	// ServiceVersion is the specific configuration version (required).
+	ServiceVersion int
 
 	// Name is the name of the kafka to update.
 	Name string
@@ -186,19 +189,19 @@ type UpdateKafkaInput struct {
 
 // UpdateKafka updates a specific kafka.
 func (c *Client) UpdateKafka(i *UpdateKafkaInput) (*Kafka, error) {
-	if i.Service == "" {
-		return nil, ErrMissingService
+	if i.ServiceID == "" {
+		return nil, ErrMissingServiceID
 	}
 
-	if i.Version == 0 {
-		return nil, ErrMissingVersion
+	if i.ServiceVersion == 0 {
+		return nil, ErrMissingServiceVersion
 	}
 
 	if i.Name == "" {
 		return nil, ErrMissingName
 	}
 
-	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka/%s", i.Service, i.Version, url.PathEscape(i.Name))
+	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka/%s", i.ServiceID, i.ServiceVersion, url.PathEscape(i.Name))
 	resp, err := c.PutForm(path, i, nil)
 	if err != nil {
 		return nil, err
@@ -213,10 +216,11 @@ func (c *Client) UpdateKafka(i *UpdateKafkaInput) (*Kafka, error) {
 
 // DeleteKafkaInput is the input parameter to DeleteKafka.
 type DeleteKafkaInput struct {
-	// Service is the ID of the service. Version is the specific configuration
-	// version. Both fields are required.
-	Service string
-	Version int
+	// ServiceID is the ID of the service (required).
+	ServiceID string
+
+	// ServiceVersion is the specific configuration version (required).
+	ServiceVersion int
 
 	// Name is the name of the kafka to delete (required).
 	Name string
@@ -224,19 +228,19 @@ type DeleteKafkaInput struct {
 
 // DeleteKafka deletes the given kafka version.
 func (c *Client) DeleteKafka(i *DeleteKafkaInput) error {
-	if i.Service == "" {
-		return ErrMissingService
+	if i.ServiceID == "" {
+		return ErrMissingServiceID
 	}
 
-	if i.Version == 0 {
-		return ErrMissingVersion
+	if i.ServiceVersion == 0 {
+		return ErrMissingServiceVersion
 	}
 
 	if i.Name == "" {
 		return ErrMissingName
 	}
 
-	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka/%s", i.Service, i.Version, url.PathEscape(i.Name))
+	path := fmt.Sprintf("/service/%s/version/%d/logging/kafka/%s", i.ServiceID, i.ServiceVersion, url.PathEscape(i.Name))
 	resp, err := c.Delete(path, nil)
 	if err != nil {
 		return err
